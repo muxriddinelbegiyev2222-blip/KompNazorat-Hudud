@@ -22,17 +22,25 @@
         <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-btn active">
           <span>&#9638; Viloyat Boshqaruvi</span>
         </button>
-        <button onclick="switchTab('proposals')" id="btn-proposals" class="nav-btn">
-          <span>&#9993; Markazga Takliflar</span>
-          <span class="badge badge-blue" id="badge-proposals">0 ta</span>
-        </button>
         <button onclick="switchTab('tasks')" id="btn-tasks" class="nav-btn">
           <span>&#9745; Markaz Topshiriqlari</span>
           <span class="badge badge-amber" id="badge-tasks">0 ta</span>
         </button>
+        <button onclick="switchTab('proposals')" id="btn-proposals" class="nav-btn">
+          <span>&#9993; Markazga Takliflar</span>
+          <span class="badge badge-blue" id="badge-proposals">0 ta</span>
+        </button>
+        <button onclick="switchTab('convicted')" id="btn-convicted" class="nav-btn">
+          <span>&#9878; Sudlanganlar Reyestri</span>
+          <span class="badge badge-rose" id="badge-convicted">0 nafar</span>
+        </button>
+        <button onclick="switchTab('matrix')" id="btn-matrix" class="nav-btn">
+          <span>&#9635; Viloyat Hisobot Matritsasi</span>
+          <span class="badge badge-emerald">29 ustun</span>
+        </button>
         <button onclick="switchTab('investigations')" id="btn-investigations" class="nav-btn">
-          <span>&#9635; Xizmat Tekshiruvlari</span>
-          <span class="badge badge-emerald" id="badge-inv">0 ta</span>
+          <span>&#128269; Xizmat Tekshiruvlari</span>
+          <span class="badge badge-amber" id="badge-inv">0 ta</span>
         </button>
         <button onclick="switchTab('risk')" id="btn-risk" class="nav-btn">
           <span>&#9888; Xavf Guruhlari (A, B, D)</span>
@@ -49,7 +57,7 @@
       </nav>
     </div>
     <div style="padding: 16px; border-top: 1px solid #1e293b; background: #070d1e;">
-      <p style="font-size: 11px; font-weight: 800; color: #fff;" id="sidebarInspectorName">Viloyat Komplayens Inspektori</p>
+      <p style="font-size: 11px; font-weight: 800; color: #fff;" id="sidebarInspectorName">Viloyat Komplayens Xizmati</p>
       <p style="font-size: 10px; color: #38bdf8; font-weight: 700;">&#9679; Hududiy Vakolat Bilan</p>
     </div>
   </aside>
@@ -66,10 +74,11 @@
         </div>
       </div>
       <div class="header-btns">
-        <button onclick="openModal('newProposalModal')" class="btn btn-blue">+ Markazga taklif kiritish</button>
+        <button onclick="openModal('newConvictedModal')" class="btn btn-rose">+ Sudlangan xodim</button>
+        <button onclick="openModal('newProposalModal')" class="btn btn-blue">+ Markazga taklif</button>
         <button onclick="openModal('newInvestigationModal')" class="btn btn-amber">+ Tekshiruv ochish</button>
-        <button onclick="openModal('newRiskModal')" class="btn btn-rose">+ Xavfli xodim kiritish</button>
-        <button onclick="openModal('newOperationModal')" class="btn btn-slate">+ Tezkor xabar yuborish</button>
+        <button onclick="openModal('newRiskModal')" class="btn btn-rose">+ Xavfli xodim</button>
+        <button onclick="openModal('newOperationModal')" class="btn btn-slate">+ Tezkor xabar</button>
       </div>
     </header>
 
@@ -77,40 +86,50 @@
 
       <!-- 1. VILOYAT DASHBOARDI -->
       <section id="tab-dashboard" class="tab-section">
-        <div class="kpi-grid">
-          <div class="card" style="border-left: 4px solid #0284c7;">
-            <div class="card-title">Markazga Yuborilgan Takliflar</div>
-            <div class="card-val" id="dash-prop-count" style="color: #0284c7;">0 ta</div>
-            <div class="card-sub">Rotatsiya, chora va tekshiruv tashabbusi</div>
-          </div>
+        <!-- VILOYATNING 5 TA ASOSIY KPI KARTALARI -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(5, 1fr);">
           <div class="card" style="border-left: 4px solid #d97706;">
-            <div class="card-title">Markaz Topshiriqlari</div>
-            <div class="card-val" id="dash-task-count" style="color: #d97706;">0 ta</div>
-            <div class="card-sub">Ijro intizomi va topshiriqlar</div>
+            <div class="card-title">Xizmat Tekshiruvlari</div>
+            <div class="card-val" id="dash-inv-count" style="color: #d97706;">0 ta</div>
+            <div class="card-sub" id="dash-inv-sub">HMMQO: 0 | Ichki: 0</div>
           </div>
           <div class="card" style="border-left: 4px solid #be123c;">
-            <div class="card-title">Korrupsion Xavfli Xodimlar</div>
-            <div class="card-val" id="dash-risk-count" style="color: #be123c;">0 nafar</div>
-            <div class="card-sub">A, B, D toifadagi xodimlar</div>
+            <div class="card-title">Sudlangan Xodimlar</div>
+            <div class="card-val" id="dash-conv-count" style="color: #be123c;">0 nafar</div>
+            <div class="card-sub">Chetlatilganlar reyestrida</div>
+          </div>
+          <div class="card" style="border-left: 4px solid #0284c7;">
+            <div class="card-title">Markaz Topshiriqlari</div>
+            <div class="card-val" id="dash-task-count" style="color: #0284c7;">0 ta</div>
+            <div class="card-sub" id="dash-task-sub">Bajarildi: 0 | Jarayonda: 0</div>
+          </div>
+          <div class="card" style="border-left: 4px solid #b45309;">
+            <div class="card-title">Xavf Guruhlari (A, B, D)</div>
+            <div class="card-val" id="dash-risk-count" style="color: #b45309;">0 nafar</div>
+            <div class="card-sub" id="dash-risk-sub">A: 0 | B: 0 | D: 0</div>
           </div>
           <div class="card" style="border-left: 4px solid #047857;">
-            <div class="card-title">Manfaatlar To'qnashuvi / STIR</div>
+            <div class="card-title">Manfaatlar & STIR</div>
             <div class="card-val" id="dash-conf-count" style="color: #047857;">0 holat</div>
-            <div class="card-sub">MCHJ ta'sischiligi va qarindoshlik</div>
+            <div class="card-sub">MCHJ va qarindoshlik</div>
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px;">
           <!-- Tuman filiallari ijro holati -->
           <div class="box">
-            <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 10px;">Viloyat Tuman Filiallari Bo'yicha Holat</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <h3 style="font-size: 13px; font-weight: 800;" id="dashDistrictsHeader">Viloyat Tuman Filiallari Bo'yicha Holat</h3>
+              <span class="badge badge-blue">Tumanlar monitoringi</span>
+            </div>
             <table>
               <thead>
                 <tr>
                   <th>Tuman / Shakar Filiali</th>
                   <th style="text-align: center;">Tekshiruv</th>
+                  <th style="text-align: center;">Sudlangan</th>
                   <th style="text-align: center;">Xavf (A, B, D)</th>
-                  <th style="text-align: center;">STIR Aloqadorlik</th>
+                  <th style="text-align: center;">STIR / Aloqa</th>
                   <th style="text-align: center;">Tezkor Tadbir</th>
                 </tr>
               </thead>
@@ -118,28 +137,58 @@
             </table>
           </div>
 
-          <!-- Markaz bilan operativ aloqa xabarlari -->
+          <!-- Markaz bilan operativ aloqa va takliflar paneli -->
           <div class="box" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-              <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 4px;">Respublika Markazi Bilan Operativ Aloqa</h3>
+              <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 4px;">Respublika Markazi Bilan Aloqa</h3>
               <p style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Topshiriqlar ijrosi va takliflar monitoringi</p>
               <div style="display: flex; flex-direction: column; gap: 8px;">
                 <div style="padding: 10px; background: #f0fdf4; border-radius: 6px; border: 1px solid #bbf7d0;">
-                  <b style="font-size: 11px; color: #047857;">Ijro etilgan topshiriqlar:</b>
-                  <p style="font-size: 11px; color: #334155; margin-top: 2px;" id="dashTasksDoneCount">Barchasi o'z vaqtida taqdim etilgan</p>
+                  <b style="font-size: 11px; color: #047857;">Bajarilgan topshiriqlar:</b>
+                  <p style="font-size: 11px; color: #334155; margin-top: 2px;" id="dashTasksDoneSummary">Barchasiga hisobot va fayl biriktirilgan</p>
                 </div>
                 <div style="padding: 10px; background: #eff6ff; border-radius: 6px; border: 1px solid #bfdbfe;">
-                  <b style="font-size: 11px; color: #1d4ed8;">Ko'rib chiqilayotgan takliflar:</b>
-                  <p style="font-size: 11px; color: #334155; margin-top: 2px;" id="dashProposalsReviewCount">Markaz apparati komplayens xizmatida</p>
+                  <b style="font-size: 11px; color: #1d4ed8;">Yuborilgan xizmat takliflari:</b>
+                  <p style="font-size: 11px; color: #334155; margin-top: 2px;" id="dashProposalsSummary">Markaz apparatida ko'rib chiqilmoqda</p>
                 </div>
               </div>
             </div>
-            <button onclick="openModal('newProposalModal')" class="btn btn-blue" style="width: 100%; margin-top: 14px; justify-content: center;">+ Yangi Taklif Yuborish</button>
+            <div style="display: flex; gap: 8px; margin-top: 14px;">
+              <button onclick="switchTab('tasks')" class="btn btn-emerald" style="flex: 1; justify-content: center;">Topshiriqlarga javob yo'llash</button>
+              <button onclick="openModal('newProposalModal')" class="btn btn-blue" style="flex: 1; justify-content: center;">+ Yangi taklif</button>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- 2. MARKAZGA TAKLIFLAR VA TASHABBUSLAR -->
+      <!-- 2. MARKAZ TOPSHIRIQLARI (JAVOB VA FAYL BIRIKTIRISH FUNKSIYASI BILAN) -->
+      <section id="tab-tasks" class="tab-section hidden">
+        <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 800;">Respublika Markazidan Kelgan Topshiriqlar Ijrosi</h3>
+            <p style="font-size: 11px; color: #64748b;">Topshiriq bo'yicha javob yozish, PDF/dalolatnoma faylini biriktirish va markazga uzatish</p>
+          </div>
+          <span class="badge badge-amber" id="taskTabBadge">Nazoratda</span>
+        </div>
+        <div class="box" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Topshiriq Kodi va Mazmuni</th>
+                <th>Mas'ul Tuman Filiali</th>
+                <th>Berilgan Sana</th>
+                <th>Dedlayn</th>
+                <th style="text-align: center;">Holati</th>
+                <th>Biriktirilgan Fayl / Javob</th>
+                <th style="text-align: center;">Amal</th>
+              </tr>
+            </thead>
+            <tbody id="tasksTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. MARKAZGA TAKLIFLAR -->
       <section id="tab-proposals" class="tab-section hidden">
         <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
           <div>
@@ -155,7 +204,6 @@
                 <th>Taklif Kodi va Sanasi</th>
                 <th>Yo'nalish / Tuman</th>
                 <th>Taklif Mazmuni</th>
-                <th>Asos Hujjat</th>
                 <th style="text-align: center;">Markaz Xulosasi</th>
                 <th style="text-align: center;">Hujjat (PDF)</th>
               </tr>
@@ -165,30 +213,73 @@
         </div>
       </section>
 
-      <!-- 3. MARKAZ TOPSHIRIQLARI IJROSI -->
-      <section id="tab-tasks" class="tab-section hidden">
-        <div class="box">
-          <h3 style="font-size: 14px; font-weight: 800;">Respublika Markazidan Kelgan Topshiriqlar Ijrosi</h3>
-          <p style="font-size: 11px; color: #64748b;">Topshiriq bo'yicha hisobot tayyorlash va ijrosini tasdiqlash</p>
+      <!-- 4. SUDLANGANLAR REYESTRI (HUDUD O'ZI KIRITADI) -->
+      <section id="tab-convicted" class="tab-section hidden">
+        <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 800;">Viloyat Bo'yicha Sudlangan va Chetlatilgan Xodimlar Reyestri</h3>
+            <p style="font-size: 11px; color: #64748b;">Qayta ishga olishni bloklash uchun sudlangan xodimlarni kiritish va monitoring qilish</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="convictedSearch" onkeyup="filterRegionConvicted()" placeholder="JSHSHIR (PNFL) yoki Familiya..." style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 11px; width: 240px;">
+            <button onclick="openModal('newConvictedModal')" class="btn btn-rose">+ Sudlangan xodim kiritish</button>
+          </div>
         </div>
         <div class="box" style="padding: 0; overflow: hidden;">
           <table>
             <thead>
               <tr>
-                <th>Topshiriq Kodi va Mazmuni</th>
-                <th>Mas'ul Filial</th>
-                <th>Berilgan Sana</th>
-                <th>Dedlayn</th>
+                <th>Xodim F.I.SH va JSHSHIR</th>
+                <th>Tuman Filiali va Lavozimi</th>
+                <th>Sud Hukmi Sanasi va Sudi</th>
+                <th>JK Moddalari</th>
+                <th>Jazo Turi</th>
                 <th style="text-align: center;">Holati</th>
-                <th style="text-align: center;">Amal</th>
+                <th style="text-align: center;">Hukm (PDF)</th>
               </tr>
             </thead>
-            <tbody id="tasksTableBody"></tbody>
+            <tbody id="convictedTableBody"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- 4. HUDUDIY XIZMAT TEKSHIRUVLARI -->
+      <!-- 5. VILOYATNING 29 USTUNLI HISOBOT MATRITSASI (AYNAN O'Z QATORI) -->
+      <section id="tab-matrix" class="tab-section hidden">
+        <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 800;" id="regionMatrixHeaderTitle">Viloyat Xizmat Tekshiruvlari Hisobot Matritsasi (29 Ustun)</h3>
+            <p style="font-size: 11px; color: #64748b;">HMMQO xatlari va ichki nazorat tashabbusi bo'yicha ko'rilgan choralar taqsimoti</p>
+          </div>
+          <button onclick="exportRegionMatrixToExcel()" class="btn btn-emerald">&#128190; Excel yuklab olish</button>
+        </div>
+        <div class="box" style="overflow-x: auto; padding: 10px;">
+          <table class="matrix-tbl">
+            <thead>
+              <tr style="background: #cbd5e1; font-weight: 800;">
+                <th rowspan="3">T/r</th><th rowspan="3" style="min-width: 140px; text-align: left;">Davlat organi nomlanishi</th>
+                <th colspan="3" style="background: #dcfce7;">O'tkazilgan tekshiruvlar</th>
+                <th colspan="4" style="background: #fef3c7;">HMMQO xatlari asosida</th>
+                <th colspan="4" style="background: #fee2e2;">Ichki nazorat tashabbusi</th>
+                <th colspan="16" style="background: #dbeafe;">Ko'rilgan choralar taqsimoti</th>
+              </tr>
+              <tr style="background: #e2e8f0; font-weight: 700;">
+                <th rowspan="2">Jami</th><th rowspan="2">HMMQO</th><th rowspan="2">Ichki</th>
+                <th rowspan="2">Prok.</th><th rowspan="2">IIB</th><th rowspan="2">DXX</th><th rowspan="2">Boshqa</th>
+                <th rowspan="2">Prok.</th><th rowspan="2">IIB</th><th rowspan="2">DXX</th><th rowspan="2">Boshqa</th>
+                <th colspan="8" style="background: #eff6ff;">HMMQO xatlari bo'yicha</th>
+                <th colspan="8" style="background: #e0e7ff;">Ichki nazorat bo'yicha</th>
+              </tr>
+              <tr style="font-size: 9px;">
+                <th>Jinoyat</th><th>Ma'mur.</th><th>JPK 83</th><th>JPK 84</th><th>Ko'rmasdan</th><th>Jarayonda</th><th style="color:#be123c;">Bo'shat.</th><th>Intizom.</th>
+                <th>Jinoyat</th><th>Ma'mur.</th><th>JPK 83</th><th>JPK 84</th><th>Ko'rmasdan</th><th>Jarayonda</th><th style="color:#be123c;">Bo'shat.</th><th>Intizom.</th>
+              </tr>
+            </thead>
+            <tbody id="regionMatrixTbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6. HUDUDIY XIZMAT TEKSHIRUVLARI -->
       <section id="tab-investigations" class="tab-section hidden">
         <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
           <div>
@@ -214,7 +305,7 @@
         </div>
       </section>
 
-      <!-- 5. KORRUPSION XAVF GURUHLARI (A, B, D) -->
+      <!-- 7. KORRUPSION XAVF GURUHLARI (A, B, D) -->
       <section id="tab-risk" class="tab-section hidden">
         <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
           <div>
@@ -244,7 +335,7 @@
         </div>
       </section>
 
-      <!-- 6. MANFAATLAR TO'QNASHUVI VA STIR -->
+      <!-- 8. MANFAATLAR TO'QNASHUVI VA STIR -->
       <section id="tab-conflicts" class="tab-section hidden">
         <div class="box">
           <h3 style="font-size: 14px; font-weight: 800;">Manfaatlar To'qnashuvi va Tadbirkorlikka Aloqadorlik (STIR)</h3>
@@ -267,7 +358,7 @@
         </div>
       </section>
 
-      <!-- 7. TEZKOR TADBIRLAR SVODKASI -->
+      <!-- 9. TEZKOR TADBIRLAR SVODKASI -->
       <section id="tab-operations" class="tab-section hidden">
         <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
           <div>
@@ -282,7 +373,7 @@
               <tr>
                 <th>Bildirishnoma Kodi</th>
                 <th>Tuman Filiali</th>
-                <th>O'tkazgan Vakolatli Organ</th>
+                <th>O'tkazgan Organ</th>
                 <th>Komplayens Hamkorligi</th>
                 <th>Ashyoviy Dalil / Pora</th>
                 <th>Holat Tavsifi</th>
@@ -297,9 +388,61 @@
     </div>
   </main>
 
-  <!-- MODALLAR -->
+  <!-- MODAL OYNALAR -->
 
-  <!-- 1. YANGI TAKLIF KIRITISH -->
+  <!-- TOPSHIRIQQA JAVOB YO'LLASH VA FAYL BIRIKTIRISH MODALI -->
+  <div id="taskResponseModal" class="modal-overlay hidden">
+    <div class="modal-box" style="width: 580px;">
+      <div class="modal-header">
+        <h3 id="taskModalHeader">Topshiriqqa Javob Yo'llash va Fayl Biriktirish</h3>
+        <button onclick="closeModal('taskResponseModal')" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+        <input type="hidden" id="task-resp-id">
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px;">
+          <b id="task-resp-title" style="color: #0b132b; font-size: 12px;"></b>
+        </div>
+        <label>Ijro Bo'yicha Javob Hisoboti: 
+          <textarea id="task-resp-text" rows="4" placeholder="Topshiriq ijrosi yuzasidan o'rganish o'tkazildi va quyidagi natijalarga erishildi..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea>
+        </label>
+        <label>Asoslovchi Rasmiy Hujjat / Dalolatnoma (PDF, DOCX, Rasm): 
+          <input type="file" id="task-resp-file" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff;">
+        </label>
+        <button onclick="submitTaskResponse()" class="btn btn-emerald" style="margin-top: 10px; width: 100%; justify-content: center; padding: 10px;">
+          &#10004; Markazga Javob va Faylni Rasmiy Yuborish
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- YANGI SUDLANGAN XODIM KIRITISH MODALI -->
+  <div id="newConvictedModal" class="modal-overlay hidden">
+    <div class="modal-box" style="width: 560px;">
+      <div class="modal-header">
+        <h3>Sudlangan Xodimni Reyestrga Kiritish</h3>
+        <button onclick="closeModal('newConvictedModal')" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 10px;">
+        <label>Xodim F.I.SH: <input type="text" id="conv-input-name" placeholder="Masalan: Ergashev Tohir Mansurovich" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>14 xonali JSHSHIR (PNFL): <input type="text" id="conv-input-pinfl" placeholder="Masalan: 31904881120021" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <label>Tuman filiali: <input type="text" id="conv-input-district" placeholder="Masalan: Pastdarg'om filiali" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+          <label>Egallagan lavozimi: <input type="text" id="conv-input-role" placeholder="Yetakchi muhandis" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <label>Hukm chiqargan sud: <input type="text" id="conv-input-court" placeholder="JIB Samarqand shahar sudi" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+          <label>Hukm sanasi: <input type="date" id="conv-input-date" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        </div>
+        <label>JK Moddalari: <input type="text" id="conv-input-articles" placeholder="168-m, 205-m, 210-m" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>Belgilangan jazo turi: <input type="text" id="conv-input-punish" placeholder="Mansab huquqidan mahrum qilish, ozodlikni cheklash" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <button onclick="submitNewConvicted()" class="btn btn-rose" style="margin-top: 10px; width: 100%; justify-content: center; padding: 10px;">
+          Reyestrga Saqlash va Tizimdan Bloklash
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKAZGA TAKLIF KIRITISH -->
   <div id="newProposalModal" class="modal-overlay hidden">
     <div class="modal-box">
       <div class="modal-header"><h3>Respublika Markaziga Taklif Kiritish</h3><button onclick="closeModal('newProposalModal')" class="close-btn">&times;</button></div>
@@ -313,34 +456,26 @@
           </select>
         </label>
         <label>Tegishli Tuman Filiali: <input type="text" id="prop-district" placeholder="Masalan: Pastdarg'om filiali" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
-        <label>Xodim (agar shaxsga taalluqli bo'lsa): <input type="text" id="prop-officer" placeholder="F.I.SH va lavozimi" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
         <label>Asosli Taklif Mazmuni: <textarea id="prop-desc" rows="3" placeholder="Aniqlangan xavflar va asosli tavsiyalar..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea></label>
         <button onclick="submitNewProposal()" class="btn btn-blue" style="margin-top: 10px; width: 100%; justify-content: center;">Markazga Rasmiy Yuborish</button>
       </div>
     </div>
   </div>
 
-  <!-- 2. TEKSHIRUV OCHISH -->
+  <!-- TEKSHIRUV OCHISH -->
   <div id="newInvestigationModal" class="modal-overlay hidden">
     <div class="modal-box">
       <div class="modal-header"><h3>Hududiy Xizmat Tekshiruvi Ochish</h3><button onclick="closeModal('newInvestigationModal')" class="close-btn">&times;</button></div>
       <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
         <label>Tuman Filiali: <input type="text" id="inv-district" placeholder="Masalan: Urgut filiali" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
         <label>Xodim F.I.SH va Lavozimi: <input type="text" id="inv-officer" placeholder="Xodim ma'lumotlari" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
-        <label>Tekshiruv Asosi: 
-          <select id="inv-reason-type" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;">
-            <option>Hududiy komplayens xizmati tashabbusi</option>
-            <option>Fuqaro murojaati (Ishonch telefoni)</option>
-            <option>Prokuratura / IIB / DXX xati</option>
-          </select>
-        </label>
         <label>Holat Tafsiloti: <textarea id="inv-desc" rows="3" placeholder="Yer chegarasini asossiz o'zgartirish..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea></label>
         <button onclick="submitNewInvestigation()" class="btn btn-amber" style="margin-top: 10px; width: 100%; justify-content: center;">Tekshiruvni Boshlash</button>
       </div>
     </div>
   </div>
 
-  <!-- 3. XAVFLI XODIM KIRITISH -->
+  <!-- XAVFLI XODIM KIRITISH -->
   <div id="newRiskModal" class="modal-overlay hidden">
     <div class="modal-box">
       <div class="modal-header"><h3>Xodimning Korrupsion Xavfini Baholash</h3><button onclick="closeModal('newRiskModal')" class="close-btn">&times;</button></div>
@@ -364,7 +499,7 @@
     </div>
   </div>
 
-  <!-- 4. TEZKOR TADBIK XABARI -->
+  <!-- TEZKOR TADBIQ XABARI -->
   <div id="newOperationModal" class="modal-overlay hidden">
     <div class="modal-box">
       <div class="modal-header"><h3>Tezkor Tadbir Operativ Bildirishnomasi</h3><button onclick="closeModal('newOperationModal')" class="close-btn">&times;</button></div>
@@ -383,7 +518,7 @@
           <label for="op-collab" style="cursor: pointer; font-weight: 700;">Viloyat komplayens xizmati hamkorligida o'tkazilgan</label>
         </div>
         <label>Pora / Ashyoviy Dalil Miqdori: <input type="text" id="op-proof" placeholder="Masalan: 3,000 AQSH dollari" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
-        <label>Holat Tavsifi: <textarea id="op-desc" rows="2" placeholder="Ekin yerini noturar joy toifasiga o'tkazib berish evaziga ushlangan..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea></label>
+        <label>Holat Tavsifi: <textarea id="op-desc" rows="2" placeholder="Ekin yerini noturar joyga o'tkazish evaziga ushlangan..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea></label>
         <button onclick="submitNewOperation()" class="btn btn-rose" style="margin-top: 10px; width: 100%; justify-content: center;">Markazga Zudlik Bilan Yuborish</button>
       </div>
     </div>
