@@ -1,0 +1,246 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* CHAP MENYU */
+aside {
+  width: 260px;
+  background: #0f172a;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #1e293b;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #090d16;
+  border-bottom: 1px solid #1e293b;
+}
+
+.brand-icon { font-size: 26px; }
+.brand-text h1 { font-size: 14px; font-weight: 800; color: #fff; }
+.brand-text p { font-size: 11px; color: #38bdf8; font-weight: 700; }
+
+nav {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.nav-btn:hover { background: #1e293b; color: #fff; }
+.nav-btn.active { background: #0284c7; color: #fff; font-weight: 700; }
+
+/* ASOSIY OYNA */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+header {
+  height: 56px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+}
+
+.region-selector-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #e0f2fe;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #bae6fd;
+}
+
+.header-btns { display: flex; gap: 8px; }
+
+.content-area {
+  flex: 1;
+  padding: 18px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tab-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hidden { display: none !important; }
+.pointer { cursor: pointer; }
+
+/* KARTALAR */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  transition: transform 0.15s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+
+.card-title { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+.card-val { font-size: 22px; font-weight: 800; margin: 4px 0; }
+.card-sub { font-size: 11px; color: #64748b; font-weight: 600; }
+
+.box {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* 3 TOIFALI XAVF RANGLARI */
+.risk-badge-A { background: #fee2e2; color: #be123c; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 10px; }
+.risk-badge-B { background: #fef3c7; color: #b45309; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 10px; }
+.risk-badge-D { background: #dcfce7; color: #047857; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 10px; }
+
+/* STATUS BADGELARI */
+.badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.badge-blue { background: #e0f2fe; color: #0284c7; }
+.badge-emerald { background: #dcfce7; color: #047857; }
+.badge-rose { background: #fee2e2; color: #be123c; }
+.badge-amber { background: #fef3c7; color: #b45309; }
+.badge-slate { background: #f1f5f9; color: #475569; }
+
+.btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-blue { background: #0284c7; color: #fff; }
+.btn-rose { background: #be123c; color: #fff; }
+.btn-emerald { background: #047857; color: #fff; }
+.btn-amber { background: #d97706; color: #fff; }
+.btn-slate { background: #e2e8f0; color: #1e293b; }
+
+/* JADVALLAR */
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+th { background: #f8fafc; color: #475569; font-weight: 700; }
+
+/* MODALLAR VA PDF QOG'OZI */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 10px;
+  width: 720px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.modal-header h3 { font-size: 13px; font-weight: 800; }
+.close-btn { background: transparent; border: none; font-size: 20px; cursor: pointer; color: #64748b; }
+.modal-body { padding: 16px 20px; overflow-y: auto; }
+
+.pdf-paper {
+  background: #fff;
+  padding: 40px;
+  border-radius: 4px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #111;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.pdf-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+.pdf-header h2 { font-size: 16px; font-weight: bold; }
+.pdf-stamp { margin-top: 30px; display: flex; justify-content: space-between; align-items: center; }
+.stamp-box {
+  border: 3px double #0284c7;
+  color: #0284c7;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 900;
+  text-align: center;
+  transform: rotate(-3deg);
+}
