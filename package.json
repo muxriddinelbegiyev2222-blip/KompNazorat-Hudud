@@ -1,1 +1,33 @@
-package.json
+{
+  "name": "kompnazorat-hudud",
+  "version": "1.0.0",
+  "description": "Kadastr Agentligi Viloyat Komplayens Nazorati Hududiy Portali",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64"
+  },
+  "author": "Kadastr Komplayens",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "uz.kadastr.kompnazorathudud",
+    "productName": "KompNazorat-Hudud",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
