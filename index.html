@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KompNazorat - Hudud (Viloyat Komplayens Portali)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- CHAP ASOSIY MENYU -->
+  <aside>
+    <div>
+      <div class="brand">
+        <div class="brand-icon">&#128737;</div>
+        <div class="brand-text">
+          <h1>KOMPNAZORAT</h1>
+          <p>HUDUDIY INSPEKTOR PORTALI</p>
+        </div>
+      </div>
+      <nav>
+        <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-btn active">
+          <span>&#9638; Viloyat Boshqaruvi</span>
+        </button>
+        <button onclick="switchTab('proposals')" id="btn-proposals" class="nav-btn">
+          <span>&#9993; Markazga Takliflar</span>
+          <span class="badge badge-blue" id="badge-proposals">0 ta</span>
+        </button>
+        <button onclick="switchTab('tasks')" id="btn-tasks" class="nav-btn">
+          <span>&#9745; Markaz Topshiriqlari</span>
+          <span class="badge badge-amber" id="badge-tasks">0 ta</span>
+        </button>
+        <button onclick="switchTab('investigations')" id="btn-investigations" class="nav-btn">
+          <span>&#9635; Xizmat Tekshiruvlari</span>
+          <span class="badge badge-emerald" id="badge-inv">0 ta</span>
+        </button>
+        <button onclick="switchTab('risk')" id="btn-risk" class="nav-btn">
+          <span>&#9888; Xavf Guruhlari (A, B, D)</span>
+          <span class="badge badge-rose" id="badge-risk">0 ta</span>
+        </button>
+        <button onclick="switchTab('conflicts')" id="btn-conflicts" class="nav-btn">
+          <span>&#9792; Manfaatlar & STIR</span>
+          <span class="badge badge-blue" id="badge-conf">0 ta</span>
+        </button>
+        <button onclick="switchTab('operations')" id="btn-operations" class="nav-btn">
+          <span>&#9874; Tezkor Tadbirlar Svodkasi</span>
+          <span class="badge badge-rose" id="badge-ops">0 ta</span>
+        </button>
+      </nav>
+    </div>
+    <div style="padding: 16px; border-top: 1px solid #1e293b; background: #070d1e;">
+      <p style="font-size: 11px; font-weight: 800; color: #fff;" id="sidebarInspectorName">Viloyat Komplayens Inspektori</p>
+      <p style="font-size: 10px; color: #38bdf8; font-weight: 700;">&#9679; Hududiy Vakolat Bilan</p>
+    </div>
+  </aside>
+
+  <!-- ASOSIY ISH MAYDONI -->
+  <main>
+    <header>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <h2 id="page-title" style="font-size: 14px; font-weight: 800;">Viloyat Boshqaruvi va Nazorati</h2>
+        <!-- VILOYATNI TANLASH SELEKTORI -->
+        <div class="region-selector-bar">
+          <label style="font-size: 11px; font-weight: 800; color: #0369a1;">Faol Viloyat:</label>
+          <select id="activeRegionSelect" onchange="onRegionChange()" style="border: none; background: transparent; font-size: 12px; font-weight: 800; color: #0c4a6e; cursor: pointer; outline: none;"></select>
+        </div>
+      </div>
+      <div class="header-btns">
+        <button onclick="openModal('newProposalModal')" class="btn btn-blue">+ Markazga taklif kiritish</button>
+        <button onclick="openModal('newInvestigationModal')" class="btn btn-amber">+ Tekshiruv ochish</button>
+        <button onclick="openModal('newRiskModal')" class="btn btn-rose">+ Xavfli xodim kiritish</button>
+        <button onclick="openModal('newOperationModal')" class="btn btn-slate">+ Tezkor xabar yuborish</button>
+      </div>
+    </header>
+
+    <div class="content-area">
+
+      <!-- 1. VILOYAT DASHBOARDI -->
+      <section id="tab-dashboard" class="tab-section">
+        <div class="kpi-grid">
+          <div class="card" style="border-left: 4px solid #0284c7;">
+            <div class="card-title">Markazga Yuborilgan Takliflar</div>
+            <div class="card-val" id="dash-prop-count" style="color: #0284c7;">0 ta</div>
+            <div class="card-sub">Rotatsiya, chora va tekshiruv tashabbusi</div>
+          </div>
+          <div class="card" style="border-left: 4px solid #d97706;">
+            <div class="card-title">Markaz Topshiriqlari</div>
+            <div class="card-val" id="dash-task-count" style="color: #d97706;">0 ta</div>
+            <div class="card-sub">Ijro intizomi va topshiriqlar</div>
+          </div>
+          <div class="card" style="border-left: 4px solid #be123c;">
+            <div class="card-title">Korrupsion Xavfli Xodimlar</div>
+            <div class="card-val" id="dash-risk-count" style="color: #be123c;">0 nafar</div>
+            <div class="card-sub">A, B, D toifadagi xodimlar</div>
+          </div>
+          <div class="card" style="border-left: 4px solid #047857;">
+            <div class="card-title">Manfaatlar To'qnashuvi / STIR</div>
+            <div class="card-val" id="dash-conf-count" style="color: #047857;">0 holat</div>
+            <div class="card-sub">MCHJ ta'sischiligi va qarindoshlik</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px;">
+          <!-- Tuman filiallari ijro holati -->
+          <div class="box">
+            <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 10px;">Viloyat Tuman Filiallari Bo'yicha Holat</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Tuman / Shakar Filiali</th>
+                  <th style="text-align: center;">Tekshiruv</th>
+                  <th style="text-align: center;">Xavf (A, B, D)</th>
+                  <th style="text-align: center;">STIR Aloqadorlik</th>
+                  <th style="text-align: center;">Tezkor Tadbir</th>
+                </tr>
+              </thead>
+              <tbody id="dashDistrictsTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Markaz bilan operativ aloqa xabarlari -->
+          <div class="box" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 4px;">Respublika Markazi Bilan Operativ Aloqa</h3>
+              <p style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Topshiriqlar ijrosi va takliflar monitoringi</p>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="padding: 10px; background: #f0fdf4; border-radius: 6px; border: 1px solid #bbf7d0;">
+                  <b style="font-size: 11px; color: #047857;">Ijro etilgan topshiriqlar:</b>
+                  <p style="font-size: 11px; color: #334155; margin-top: 2px;" id="dashTasksDoneCount">Barchasi o'z vaqtida taqdim etilgan</p>
+                </div>
+                <div style="padding: 10px; background: #eff6ff; border-radius: 6px; border: 1px solid #bfdbfe;">
+                  <b style="font-size: 11px; color: #1d4ed8;">Ko'rib chiqilayotgan takliflar:</b>
+                  <p style="font-size: 11px; color: #334155; margin-top: 2px;" id="dashProposalsReviewCount">Markaz apparati komplayens xizmatida</p>
+                </div>
+              </div>
+            </div>
+            <button onclick="openModal('newProposalModal')" class="btn btn-blue" style="width: 100%; margin-top: 14px; justify-content: center;">+ Yangi Taklif Yuborish</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. MARKAZGA TAKLIFLAR VA TASHABBUSLAR -->
+      <section id="tab-proposals" class="tab-section hidden">
+        <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 800;">Respublika Komplayens Xizmatiga Yuborilgan Takliflar</h3>
+            <p style="font-size: 11px; color: #64748b;">Rotatsiya, xizmat tekshiruvi tayinlash va lavozimdan chetlatish tashabbuslari</p>
+          </div>
+          <button onclick="openModal('newProposalModal')" class="btn btn-blue">+ Yangi Taklif Kiritish</button>
+        </div>
+        <div class="box" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Taklif Kodi va Sanasi</th>
+                <th>Yo'nalish / Tuman</th>
+                <th>Taklif Mazmuni</th>
+                <th>Asos Hujjat</th>
+                <th style="text-align: center;">Markaz Xulosasi</th>
+                <th style="text-align: center;">Hujjat (PDF)</th>
+              </tr>
+            </thead>
+            <tbody id="proposalsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. MARKAZ TOPSHIRIQLARI IJROSI -->
+      <section id="tab-tasks" class="tab-section hidden">
+        <div class="box">
+          <h3 style="font-size: 14px; font-weight: 800;">Respublika Markazidan Kelgan Topshiriqlar Ijrosi</h3>
+          <p style="font-size: 11px; color: #64748b;">Topshiriq bo'yicha hisobot tayyorlash va ijrosini tasdiqlash</p>
+        </div>
+        <div class="box" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Topshiriq Kodi va Mazmuni</th>
+                <th>Mas'ul Filial</th>
+                <th>Berilgan Sana</th>
+                <th>Dedlayn</th>
+                <th style="text-align: center;">Holati</th>
+                <th style="text-align: center;">Amal</th>
+              </tr>
+            </thead>
+            <tbody id="tasksTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. HUDUDIY XIZMAT TEKSHIRUVLARI -->
+      <section id="tab-investigations" class="tab-section hidden">
+        <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 800;">Viloyat Miqyosidagi Xizmat Tekshiruvlari</h3>
+            <p style="font-size: 11px; color: #64748b;">Tuman filiallarida o'tkazilayotgan xizmat tekshiruvlari va dalolatnomalar</p>
+          </div>
+          <button onclick="openModal('newInvestigationModal')" class="btn btn-amber">+ Tekshiruv Ochish</button>
+        </div>
+        <div class="box" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Tekshiruv Kodi</th>
+                <th>Tuman / Filial</th>
+                <th>Xodim F.I.SH va Lavozimi</th>
+                <th>Tekshiruv Asosi</th>
+                <th>Natija / Xulosa</th>
+                <th style="text-align: center;">Xulosa (PDF)</th>
+              </tr>
+            </thead>
+            <tbody id="invTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. KORRUPSION XAVF GURUHLARI (A, B, D) -->
+      <section id="tab-risk" class="tab-section hidden">
+        <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 800;">Viloyat Korrupsion Xavf Guruhlariga Kiritilgan Xodimlar</h3>
+            <p style="font-size: 11px; color: #64748b;">
+              <span class="risk-badge-A">A Toifa — Yuqori</span> | 
+              <span class="risk-badge-B">B Toifa — O'rta</span> | 
+              <span class="risk-badge-D">D Toifa — Past</span>
+            </p>
+          </div>
+          <button onclick="openModal('newRiskModal')" class="btn btn-rose">+ Xavfli Xodim Kiritish</button>
+        </div>
+        <div class="box" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Xodim F.I.SH va JSHSHIR</th>
+                <th>Tuman Filiali va Lavozimi</th>
+                <th style="text-align: center;">Toifa</th>
+                <th>Aniqlangan Xavf Omili</th>
+                <th>Belgilangan Chora</th>
+                <th style="text-align: center;">Dosye (PDF)</th>
+              </tr>
+            </thead>
+            <tbody id="riskTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6. MANFAATLAR TO'QNASHUVI VA STIR -->
+      <section id="tab-conflicts" class="tab-section hidden">
+        <div class="box">
+          <h3 style="font-size: 14px; font-weight: 800;">Manfaatlar To'qnashuvi va Tadbirkorlikka Aloqadorlik (STIR)</h3>
+          <p style="font-size: 11px; color: #64748b;">MCHJ ta'sischiligi, YATT guvohnomalari va yaqin qarindoshlik zanjiri</p>
+        </div>
+        <div class="box" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Xodim F.I.SH va JSHSHIR</th>
+                <th>Tuman Filiali</th>
+                <th>Turi</th>
+                <th>Aloqadorlik / Kompaniya STIR</th>
+                <th>Ko'rilgan Chora</th>
+                <th style="text-align: center;">Holati</th>
+              </tr>
+            </thead>
+            <tbody id="conflictsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. TEZKOR TADBIRLAR SVODKASI -->
+      <section id="tab-operations" class="tab-section hidden">
+        <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 800;">Tezkor Tadbirlar Operativ Bildirishnomalari</h3>
+            <p style="font-size: 11px; color: #64748b;">DXX, Departament, IIB reydlari bo'yicha 24 soat ichida markazga yuboriladigan svodka</p>
+          </div>
+          <button onclick="openModal('newOperationModal')" class="btn btn-rose">+ Tezkor Xabar Yuborish</button>
+        </div>
+        <div class="box" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Bildirishnoma Kodi</th>
+                <th>Tuman Filiali</th>
+                <th>O'tkazgan Vakolatli Organ</th>
+                <th>Komplayens Hamkorligi</th>
+                <th>Ashyoviy Dalil / Pora</th>
+                <th>Holat Tavsifi</th>
+                <th style="text-align: center;">Svodka (PDF)</th>
+              </tr>
+            </thead>
+            <tbody id="opsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- MODALLAR -->
+
+  <!-- 1. YANGI TAKLIF KIRITISH -->
+  <div id="newProposalModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header"><h3>Respublika Markaziga Taklif Kiritish</h3><button onclick="closeModal('newProposalModal')" class="close-btn">&times;</button></div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+        <label>Taklif Turi: 
+          <select id="prop-type" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;">
+            <option>Xodimni boshqa tuman filialiga rotatsiya qilish</option>
+            <option>Xodimga nisbatan xizmat tekshiruvi tayinlash</option>
+            <option>Mehnat shartnomasini bekor qilish (chetlatish)</option>
+            <option>Kadastr xizmati ko'rsatish tartibini takomillashtirish</option>
+          </select>
+        </label>
+        <label>Tegishli Tuman Filiali: <input type="text" id="prop-district" placeholder="Masalan: Pastdarg'om filiali" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>Xodim (agar shaxsga taalluqli bo'lsa): <input type="text" id="prop-officer" placeholder="F.I.SH va lavozimi" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>Asosli Taklif Mazmuni: <textarea id="prop-desc" rows="3" placeholder="Aniqlangan xavflar va asosli tavsiyalar..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea></label>
+        <button onclick="submitNewProposal()" class="btn btn-blue" style="margin-top: 10px; width: 100%; justify-content: center;">Markazga Rasmiy Yuborish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. TEKSHIRUV OCHISH -->
+  <div id="newInvestigationModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header"><h3>Hududiy Xizmat Tekshiruvi Ochish</h3><button onclick="closeModal('newInvestigationModal')" class="close-btn">&times;</button></div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+        <label>Tuman Filiali: <input type="text" id="inv-district" placeholder="Masalan: Urgut filiali" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>Xodim F.I.SH va Lavozimi: <input type="text" id="inv-officer" placeholder="Xodim ma'lumotlari" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>Tekshiruv Asosi: 
+          <select id="inv-reason-type" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;">
+            <option>Hududiy komplayens xizmati tashabbusi</option>
+            <option>Fuqaro murojaati (Ishonch telefoni)</option>
+            <option>Prokuratura / IIB / DXX xati</option>
+          </select>
+        </label>
+        <label>Holat Tafsiloti: <textarea id="inv-desc" rows="3" placeholder="Yer chegarasini asossiz o'zgartirish..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea></label>
+        <button onclick="submitNewInvestigation()" class="btn btn-amber" style="margin-top: 10px; width: 100%; justify-content: center;">Tekshiruvni Boshlash</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. XAVFLI XODIM KIRITISH -->
+  <div id="newRiskModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header"><h3>Xodimning Korrupsion Xavfini Baholash</h3><button onclick="closeModal('newRiskModal')" class="close-btn">&times;</button></div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+        <label>Xodim F.I.SH: <input type="text" id="risk-name" placeholder="To'liq ismi sharifi" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>14 xonali JSHSHIR (PNFL): <input type="text" id="risk-pinfl" placeholder="31405901230018" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <label>Tuman filiali: <input type="text" id="risk-district" placeholder="Filial nomi" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+          <label>Xavf Toifasi: 
+            <select id="risk-category" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: bold;">
+              <option value="A" style="color: #be123c;">A toifa — Yuqori (Qizil)</option>
+              <option value="B" style="color: #d97706;">B toifa — O'rta (Sariq)</option>
+              <option value="D" style="color: #047857;">D toifa — Past (Yashil)</option>
+            </select>
+          </label>
+        </div>
+        <label>Lavozimi: <input type="text" id="risk-role" placeholder="Ro'yxatdan o'tkazuvchi mutaxassis..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>Aniqlangan Xavf Omili: <textarea id="risk-desc" rows="2" placeholder="Auksionsiz yer maydoniga noqonuniy xulosa tayyorlash xavfi..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea></label>
+        <button onclick="submitNewRisk()" class="btn btn-rose" style="margin-top: 10px; width: 100%; justify-content: center;">Reyestrga Saqlash</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. TEZKOR TADBIK XABARI -->
+  <div id="newOperationModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header"><h3>Tezkor Tadbir Operativ Bildirishnomasi</h3><button onclick="closeModal('newOperationModal')" class="close-btn">&times;</button></div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+        <label>Tuman Filiali: <input type="text" id="op-district" placeholder="Masalan: Pastdarg'om filiali" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>O'tkazgan Organ: 
+          <select id="op-partner" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;">
+            <option>Davlat Xavfsizlik Xizmati (DXX)</option>
+            <option>Bosh prokuratura huzuridagi Departament</option>
+            <option>Ichki Ishlar Vazirligi (IIB)</option>
+            <option>Prokuratura organlari</option>
+          </select>
+        </label>
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+          <input type="checkbox" id="op-collab" style="width: 18px; height: 18px; cursor: pointer;">
+          <label for="op-collab" style="cursor: pointer; font-weight: 700;">Viloyat komplayens xizmati hamkorligida o'tkazilgan</label>
+        </div>
+        <label>Pora / Ashyoviy Dalil Miqdori: <input type="text" id="op-proof" placeholder="Masalan: 3,000 AQSH dollari" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        <label>Holat Tavsifi: <textarea id="op-desc" rows="2" placeholder="Ekin yerini noturar joy toifasiga o'tkazib berish evaziga ushlangan..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;"></textarea></label>
+        <button onclick="submitNewOperation()" class="btn btn-rose" style="margin-top: 10px; width: 100%; justify-content: center;">Markazga Zudlik Bilan Yuborish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF KO'RISH OYNASI -->
+  <div id="pdfViewerModal" class="modal-overlay hidden">
+    <div class="modal-box" style="width: 820px;">
+      <div class="modal-header" style="background: #1e293b; color: #fff;">
+        <h3 id="pdfDocTitle">Elektron Hujjat (Rasmiy Blank)</h3>
+        <button onclick="closeModal('pdfViewerModal')" class="close-btn" style="color:#fff;">&times;</button>
+      </div>
+      <div class="modal-body" style="background: #475569; padding: 25px;">
+        <div class="pdf-paper" id="pdfPaperContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIKASI -->
+  <script src="app.js"></script>
+</body>
+</html>
